@@ -1,11 +1,12 @@
 {
   "name": "influx",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "InfluxDB Client",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha -R dot",
-    "travis-test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && standard"
+    "lint": "standard",
+    "test": "./node_modules/.bin/mocha -R spec",
+    "travis-test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && npm run lint"
   },
   "repository": {
     "type": "git",

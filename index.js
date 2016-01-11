@@ -49,7 +49,7 @@ InfluxDB.prototype._parseResults = function (response, callback) {
         var rows = _.map(series.values, function (values) {
           return _.extend(_.zipObject(series.columns, values), series.tags)
         })
-        tmp = _.chain(tmp).concat(rows).sort('time').value()
+        tmp = _.chain(tmp).concat(rows).value()
       })
     }
     results.push(tmp)
@@ -73,6 +73,9 @@ InfluxDB.prototype._parseCallback = function (callback) {
           return callback(new Error(body.results[i].error))
         }
       }
+    }
+    if (body === undefined) {
+      return callback(new Error('body is undefined'))
     }
     return callback(null, body.results)
   }
@@ -373,7 +376,7 @@ InfluxDB.prototype.createContinuousQuery = function (queryName, queryString, dat
     databaseName = this.options.database
   }
 
-  var query = 'CREATE CONTINUOUS QUERY ' + queryName + ' ON ' + databaseName + ' BEGIN ' +
+  var query = 'CREATE CONTINUOUS QUERY ' + queryName + ' ON "' + databaseName + '" BEGIN ' +
     queryString +
     ' END'
   this.queryDB(query, callback)
@@ -408,7 +411,7 @@ InfluxDB.prototype.createRetentionPolicy = function (rpName, databaseName, durat
 }
 
 InfluxDB.prototype.getRetentionPolicies = function (databaseName, callback) {
-  this.queryDB('show retention policies "' + databaseName + '"', callback)
+  this.queryDB('show retention policies on "' + databaseName + '"', callback)
 }
 
 InfluxDB.prototype.alterRetentionPolicy = function (rpName, databaseName, duration, replication, isDefault, callback) {
